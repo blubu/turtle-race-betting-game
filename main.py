@@ -7,10 +7,11 @@ screen.setup(width=200, height=600)
 
 # turtle data
 turtles = []
-colors = ["violet", "indigo", "blue", "green", "yellow", "orange", "red"]
+# colors = ["violet", "indigo", "blue", "green", "yellow", "orange", "red"]
+colors = ["red", "blue"]
 
 # user data
-user_money = [10, 10, 10]
+users = {}
 
 # race data
 play_again = 'y'
@@ -32,23 +33,33 @@ for turtle_color in colors:
     tut.penup()
     turtles.append(tut)
 
+# setting players
+for i in range(2):
+    users[f"User {i+1}"] = {
+            "user_money": 10,
+            "user_bet": 0,
+            "user_color": ""
+        }
+
+print(users)
+print(users["User 1"])
+
 # game loop
 while play_again == 'y':
     # turtles to starting point
     starting_point(turtles)
-    user_color = []
-    user_bet = []
     race_finished = False
+    total_bet = 0
+    sum_bets = 0
 
     # entering user bets
-    for i in range(1):
-        user_color.append(screen.textinput(title=f"User {i+1}", prompt="Which turtle are you betting on ?").lower())
-        user_bet.append(int(screen.textinput(title=f"User {i+1}", prompt=f"You have ${user_money[i]}.\nPlace your bet :")))
-        user_money[i] -= user_bet[i]
-
-    # total bet placed
-    total_bet = sum(user_bet)
-    sum_bets = 0
+    for user in users:
+        users[user]["user_color"] = (screen.textinput(title=f"{user}", prompt="Which turtle are you betting on ?").lower())
+        users[user]["user_bet"] = int(screen.textinput(title=f"{user}",
+                                                       prompt=f"You have ${users[user]['user_money']}."
+                                                              f"\nPlace your bet :"))
+        users[user]["user_money"] -= users[user]["user_bet"]
+        total_bet += users[user]["user_bet"]
 
     # race loop
     while not race_finished:
@@ -59,25 +70,27 @@ while play_again == 'y':
                 break
             tut.forward(randint(1, 10))
 
-    print(user_bet[0])
-    print(user_money[0])
-
     # total bets on winner
-    for i in range(1):
-        if user_color[i] == winner:
-            sum_bets += user_bet[i]
+    for user in users:
+        if users[user]["user_color"] == winner:
+            sum_bets += users[user]["user_bet"]
 
     # winnings
-    for i in range(1):
-        if user_color[i] == winner:
-            winnings = (user_bet[i]/sum_bets)*total_bet
-            user_money[i] += winnings
-            print(f"User {i+1} won ${winnings}")
+    for user in users:
+        if users[user]["user_color"] == winner:
+            winnings = (users[user]["user_bet"]/sum_bets)*total_bet
+            users[user]["user_money"] += winnings
+            print(f"{user} won ${winnings}")
         else:
-            print(f"User {i+1} lost ${user_bet[i]}")
+            print(f"{user} lost ${users[user]['user_bet']}")
+        print(f"{user} final money is ${users[user]['user_money']}")
 
     # play again
     play_again = screen.textinput(title="Exit Game", prompt="Do you want to play again? (y/n)").lower()
+
+# game end
+for tut in turtles:
+    tut.hideturtle()
 
 
 screen.exitonclick()
