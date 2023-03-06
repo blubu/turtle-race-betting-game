@@ -2,8 +2,10 @@
 def starting_point(func_turtle):
     y = -180
     for turtle in func_turtle:
-        turtle.goto(-80, y)
+        turtle.speed("normal")
+        turtle.goto(-480, y)
         y += 60
+        turtle.speed("fast")
 
 
 # check for winner
@@ -24,3 +26,4 @@ def get_winner(users_left):
         if users_left[user_left]["user_in_game"]:
             return user_left
     return 0
+

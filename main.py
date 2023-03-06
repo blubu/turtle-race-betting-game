@@ -1,22 +1,24 @@
 from turtle import Screen
 from random import randint
-from turtle_data import turtles, colors
+from turtle_data import turtles, colors, tracks
 import functions
 
 # screen setup
 screen = Screen()
-screen.setup(width=200, height=600)
+screen.setup(width=1000, height=600)
 
 # user data
 users = {}
+tracks()
 
 
 # check how many users left
 def check():
     global users
     for user_left in users:
-        if users[user_left]["user_money"] == 0:
-            print(f"\n{user_left} has insufficient funds and is removed !!\n")
+        if users[user_left]["user_in_game"] and users[user_left]["user_money"] == 0:
+            screen.textinput(title="Message", prompt=f"\n{users[user_left]['user_name']} "
+                                                     f"has insufficient funds and is removed !!\n")
             users[user_left]["user_in_game"] = False
 
 
@@ -25,8 +27,10 @@ def play_game():
     continue_game = True
 
     # setting players
-    for i in range(2):
+    for i in range(no_of_players):
+        name = screen.textinput(title=f"User {i+1}", prompt=f"Enter user {i+1} name :")
         users[f"User {i + 1}"] = {
+            "user_name": name,
             "user_money": 10,
             "user_bet": 0,
             "user_color": "",
@@ -47,7 +51,8 @@ def play_game():
         for user in users:
             if users[user]["user_in_game"]:
                 users[user]["user_color"] = (screen.textinput(title=f"{user}",
-                                                              prompt="Which turtle are you betting on ?").lower())
+                                                              prompt=f"Which turtle are you betting on "
+                                                                     f"{users[user]['user_name']}?").lower())
                 while users[user]["user_color"] not in colors:
                     users[user]["user_color"] = (screen.textinput(title=f"{user}",
                                                                   prompt="Enter valid color :").lower())
@@ -66,11 +71,11 @@ def play_game():
         # race loop
         while not race_finished:
             for tut in turtles:
-                if tut.xcor() > 80:
+                if tut.xcor() > 480:
                     winner = tut.pencolor()
                     race_finished = True
                     break
-                tut.forward(randint(1, 10))
+                tut.forward(randint(1, 20))
 
         # total bets on winner
         for user in users:
@@ -82,10 +87,10 @@ def play_game():
             if users[user]["user_color"] == winner:
                 winnings = (users[user]["user_bet"]/sum_bets)*total_bet
                 users[user]["user_money"] += winnings
-                print(f"{user} won ${winnings}")
+                print(f"{users[user]['user_name']} won ${winnings}")
             else:
-                print(f"{user} lost ${users[user]['user_bet']}")
-            print(f"{user} final money is ${users[user]['user_money']}\n")
+                print(f"{users[user]['user_name']} lost ${users[user]['user_bet']}")
+            print(f"{users[user]['user_name']} final money is ${users[user]['user_money']}\n")
 
         # checking for funds
         check()
@@ -96,7 +101,13 @@ def play_game():
 
 # main loop
 game_running = True
+
 while game_running:
+    # total players
+    no_of_players = 0
+    while no_of_players < 2 or no_of_players > 10:
+        no_of_players = int(screen.textinput(title="Players", prompt="Enter number of players (2-10)"))
+
     final_list = play_game()
     print("Game exited !")
     print(final_list)
@@ -106,7 +117,7 @@ while game_running:
         last_winner = functions.get_winner(users)
         if last_winner != 0:
             if screen.textinput(title="Winner !",
-                                prompt=f"{last_winner} won the game."
+                                prompt=f"{users[last_winner]['user_name']} won the game."
                                        f"\nDo you want to play again? (y/n)") != 'y':
                 game_running = False
         else:
