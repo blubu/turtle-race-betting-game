@@ -33,7 +33,6 @@ def check():
 def play_game():
     # loop variable
     continue_game = True
-    positions.start()
 
     # setting players
     for i in range(no_of_players):
@@ -46,10 +45,12 @@ def play_game():
             "user_in_game": True
         }
 
+    # starting positions
+    functions.starting_point(turtles)
+    positions.start()
+
     # game loop
     while continue_game:
-        # turtles to starting point
-        functions.starting_point(turtles)
 
         print(f"\nUsers left : ")
         print(functions.users_left_in_game(users))
@@ -109,6 +110,8 @@ def play_game():
         if functions.check_winners(users):
             continue_game = False
             return users
+        else:
+            functions.starting_point()
 
 
 # main loop
