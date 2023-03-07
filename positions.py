@@ -5,7 +5,7 @@ from turtle import Turtle
 WIDTH = -500
 
 # data
-circles = {}
+circles = []
 colors = ["violet", "indigo", "blue", "green", "yellow", "orange", "red"]
 coord = [75, 50, 25, 0, -25, -50, -75]
 
@@ -16,22 +16,23 @@ for i in range(7):
     tut.color("white")
     tut.penup()
     tut.shapesize(0.8)
-    circles[colors[i]] = tut
+    circles.append(tut)
 
 
 # moving circles to starting point
 def start():
     for n in range(7):
-        circles[colors[n]].goto(coord[n], 270)
-        circles[colors[n]].showturtle()
-        circles[colors[n]].color(colors[n])
+        circles[n].goto(coord[n], 270)
+        circles[n].showturtle()
+        circles[n].color(colors[n])
+        circles[n].speed("fastest")
 
 
 # update leaderboard
 def update_position(cols):
     n = 0
     for col in cols:
-        circles[col].goto(coord[n], 270)
+        circles[n].color(col)
         n += 1
 
 
@@ -64,3 +65,9 @@ def position(turtles):
             col.insert(6, c_turtle.pencolor())
 
     update_position(col)
+
+
+# clearing screens
+def clear_screen():
+    for circle in circles:
+        circle.color("white")

@@ -3,6 +3,8 @@ from turtle import Screen
 from random import randint
 from turtle_data import turtles, colors, tracks
 import positions
+import position1
+import position2
 import functions
 
 # constants
@@ -33,6 +35,7 @@ def check():
 def play_game():
     # loop variable
     continue_game = True
+    global b
 
     # setting players
     for i in range(no_of_players):
@@ -47,7 +50,7 @@ def play_game():
 
     # starting positions
     functions.starting_point(turtles)
-    positions.start()
+    b.start()
 
     # game loop
     while continue_game:
@@ -88,7 +91,7 @@ def play_game():
                     race_finished = True
                     break
                 tut.forward(randint(1, MOVE_DISTANCE))
-                positions.position(turtles)
+            b.position(turtles)
 
         # total bets on winner
         for user in users:
@@ -120,8 +123,20 @@ game_running = True
 while game_running:
     # total players
     no_of_players = 0
-    while no_of_players < 2 or no_of_players > MAX_PLAYERS:
+    while no_of_players < 1 or no_of_players > MAX_PLAYERS:
         no_of_players = int(screen.textinput(title="Players", prompt=f"Enter number of players (2-{MAX_PLAYERS})"))
+
+    # leaderboard selection
+    board = ["single", "double", "all"]
+    b = ""
+    while b not in board:
+        b = screen.textinput(title="", prompt="Enter leaderboard type (single/double/all)").lower()
+    if b == "all":
+        b = positions
+    elif b == "single":
+        b = position1
+    else:
+        b = position2
 
     final_list = play_game()
     print("Game exited !")
@@ -140,6 +155,8 @@ while game_running:
                                 prompt=f"No winner."
                                        f"\nDo you want to play again? (y/n)") != 'y':
                 game_running = False
+
+    b.clear_screen()
 
 # exit
 screen.exitonclick()
