@@ -3,9 +3,15 @@ from random import randint
 from turtle_data import turtles, colors, tracks
 import functions
 
+# constants
+WIDTH = 1000
+MAX_PLAYERS = 10
+MOVE_DISTANCE = 20
+
 # screen setup
 screen = Screen()
-screen.setup(width=1000, height=600)
+screen.setup(width=WIDTH, height=600)
+screen.title("! TURTLE RACER !")
 
 # user data
 users = {}
@@ -42,7 +48,8 @@ def play_game():
         # turtles to starting point
         functions.starting_point(turtles)
 
-        print(f"\nUsers left {users}\n")
+        print(f"\nUsers left : ")
+        print(functions.users_left_in_game(users))
         race_finished = False
         total_bet = 0
         sum_bets = 0
@@ -57,12 +64,12 @@ def play_game():
                     users[user]["user_color"] = (screen.textinput(title=f"{user}",
                                                                   prompt="Enter valid color :").lower())
 
-                users[user]["user_bet"] = int(screen.textinput(title=f"{user}",
+                users[user]["user_bet"] = float(screen.textinput(title=f"{user}",
                                                                prompt=f"You have ${users[user]['user_money']}."
                                                                       f"\nPlace your bet :"))
                 while users[user]["user_bet"] <= 0 or users[user]["user_bet"] > users[user]["user_money"]:
-                    users[user]["user_bet"] = int(screen.textinput(title=f"{user}",
-                                                                   prompt=f"You have ${users[user]['user_money']}."
+                    users[user]["user_bet"] = float(screen.textinput(title=f"{user}",
+                                                                     prompt=f"You have ${users[user]['user_money']}."
                                                                           f"\nPlace your bet :"))
 
                 users[user]["user_money"] -= users[user]["user_bet"]
@@ -71,11 +78,12 @@ def play_game():
         # race loop
         while not race_finished:
             for tut in turtles:
-                if tut.xcor() > 480:
+                if tut.xcor() > functions.X:
                     winner = tut.pencolor()
+                    screen.textinput(title="", prompt=f"The winner of this round is {winner}.")
                     race_finished = True
                     break
-                tut.forward(randint(1, 20))
+                tut.forward(randint(1, MOVE_DISTANCE))
 
         # total bets on winner
         for user in users:
@@ -105,8 +113,8 @@ game_running = True
 while game_running:
     # total players
     no_of_players = 0
-    while no_of_players < 2 or no_of_players > 10:
-        no_of_players = int(screen.textinput(title="Players", prompt="Enter number of players (2-10)"))
+    while no_of_players < 2 or no_of_players > MAX_PLAYERS:
+        no_of_players = int(screen.textinput(title="Players", prompt=f"Enter number of players (2-{MAX_PLAYERS})"))
 
     final_list = play_game()
     print("Game exited !")

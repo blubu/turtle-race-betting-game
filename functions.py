@@ -1,11 +1,19 @@
+
+# constants
+""" X = (WIDTH/2)-20 """
+X = 480
+NORMAL_SPEED = "normal"
+RACE_SPEED = "fast"
+
+
 # reset data
 def starting_point(func_turtle):
     y = -180
     for turtle in func_turtle:
-        turtle.speed("normal")
-        turtle.goto(-480, y)
+        turtle.speed(NORMAL_SPEED)
+        turtle.goto(-X, y)
         y += 60
-        turtle.speed("fast")
+        turtle.speed(RACE_SPEED)
 
 
 # check for winner
@@ -26,4 +34,13 @@ def get_winner(users_left):
         if users_left[user_left]["user_in_game"]:
             return user_left
     return 0
+
+
+# get users left
+def users_left_in_game(users):
+    players = []
+    for user in users:
+        if users[user]["user_in_game"]:
+            players.append(users[user]["user_name"])
+    return players
 
