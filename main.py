@@ -1,6 +1,8 @@
+
 from turtle import Screen
 from random import randint
 from turtle_data import turtles, colors, tracks
+import positions
 import functions
 
 # constants
@@ -31,6 +33,7 @@ def check():
 def play_game():
     # loop variable
     continue_game = True
+    positions.start()
 
     # setting players
     for i in range(no_of_players):
@@ -65,12 +68,12 @@ def play_game():
                                                                   prompt="Enter valid color :").lower())
 
                 users[user]["user_bet"] = float(screen.textinput(title=f"{user}",
-                                                               prompt=f"You have ${users[user]['user_money']}."
-                                                                      f"\nPlace your bet :"))
+                                                                 prompt=f"You have ${users[user]['user_money']}."
+                                                                        f"\nPlace your bet :"))
                 while users[user]["user_bet"] <= 0 or users[user]["user_bet"] > users[user]["user_money"]:
                     users[user]["user_bet"] = float(screen.textinput(title=f"{user}",
                                                                      prompt=f"You have ${users[user]['user_money']}."
-                                                                          f"\nPlace your bet :"))
+                                                                            f"\nPlace your bet :"))
 
                 users[user]["user_money"] -= users[user]["user_bet"]
                 total_bet += users[user]["user_bet"]
@@ -84,6 +87,7 @@ def play_game():
                     race_finished = True
                     break
                 tut.forward(randint(1, MOVE_DISTANCE))
+                positions.position(turtles)
 
         # total bets on winner
         for user in users:

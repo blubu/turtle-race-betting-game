@@ -43,4 +43,3 @@ def users_left_in_game(users):
         if users[user]["user_in_game"]:
             players.append(users[user]["user_name"])
     return players
-
