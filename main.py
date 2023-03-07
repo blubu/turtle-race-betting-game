@@ -11,6 +11,7 @@ import functions
 WIDTH = 1000
 MAX_PLAYERS = 10
 MOVE_DISTANCE = 20
+MONEY = 10
 
 # screen setup
 screen = Screen()
@@ -42,7 +43,7 @@ def play_game():
         name = screen.textinput(title=f"User {i+1}", prompt=f"Enter user {i+1} name :")
         users[f"User {i + 1}"] = {
             "user_name": name,
-            "user_money": 10,
+            "user_money": MONEY,
             "user_bet": 0,
             "user_color": "",
             "user_in_game": True
@@ -123,7 +124,7 @@ game_running = True
 while game_running:
     # total players
     no_of_players = 0
-    while no_of_players < 1 or no_of_players > MAX_PLAYERS:
+    while no_of_players < 2 or no_of_players > MAX_PLAYERS:
         no_of_players = int(screen.textinput(title="Players", prompt=f"Enter number of players (2-{MAX_PLAYERS})"))
 
     # leaderboard selection
