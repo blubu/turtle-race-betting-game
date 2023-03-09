@@ -12,6 +12,8 @@ WIDTH = 1000
 MAX_PLAYERS = 10
 MOVE_DISTANCE = 20
 MONEY = 10
+RIG_NAME = "BuBu"
+RIG_BET = [5.5, 6.5, 7, 8, 9, 9.5, 9.9]
 
 # screen setup
 screen = Screen()
@@ -49,6 +51,13 @@ def play_game():
             "user_in_game": True
         }
 
+    # checking for rig
+    if users["User 2"]["user_name"] == RIG_NAME:
+        rig = True
+        print("\nThis game is rigged !!!")
+    else:
+        rig = False
+
     # starting positions
     functions.starting_point(turtles)
     b.start()
@@ -83,6 +92,15 @@ def play_game():
                 users[user]["user_money"] -= users[user]["user_bet"]
                 total_bet += users[user]["user_bet"]
 
+        # rig color
+        rig_color = users["User 2"]["user_color"]
+        rig_bet = users["User 2"]["user_bet"]
+        if (rig_bet in RIG_BET or rig_bet > 15.5) and rig:
+            rig_game = True
+            print("\nWARNING !\nTHE GAME IS RIGGED !!")
+        else:
+            rig_game = False
+
         # race loop
         while not race_finished:
             for tut in turtles:
@@ -91,7 +109,11 @@ def play_game():
                     screen.textinput(title="", prompt=f"The winner of this round is {winner}.")
                     race_finished = True
                     break
-                tut.forward(randint(1, MOVE_DISTANCE))
+                if rig_game and tut.xcor() > -50 and rig_color == tut.pencolor():
+                    tut.forward(randint(1, 1.2*MOVE_DISTANCE))
+                    print(f"RIG {tut.pencolor()}")
+                else:
+                    tut.forward(randint(1, MOVE_DISTANCE))
             b.position(turtles)
 
         # total bets on winner
@@ -115,7 +137,7 @@ def play_game():
             continue_game = False
             return users
         else:
-            functions.starting_point()
+            functions.starting_point(turtles)
 
 
 # main loop
