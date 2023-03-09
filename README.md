@@ -8,3 +8,6 @@ Features :
  
 Upcoming Features :
  - can lend money to other players
+ 
+ Bonus :
+ - the user can rig the game by giving a specific user name and bets
